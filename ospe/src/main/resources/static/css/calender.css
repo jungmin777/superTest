@@ -1,0 +1,100 @@
+@font-face {
+	font-family: 'NEXON Lv1 Gothic OTF';
+	src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+
+/* main 스타일*/
+/*전체적인 규격*/
+.main {
+    width: 100%;
+   height: 80%;
+    padding: 40px;
+    margin-top: 190px;
+    display: grid;
+    grid-template-rows: 10% 10% 80%;
+    font-family: 'NEXON Lv1 Gothic OTF';
+}
+
+
+/* 메인 제목(예약하기) 규격*/
+.mainheader {
+    display: grid;
+    grid-template-rows: 90% 10%;
+    width: 100%;
+    height: 100%;
+}
+
+.searchTitle{
+    font-family: 'JalnanGothic';
+    font-size: 50px;
+    margin-left: 40px;
+}
+
+/* 메인제목 밑 밑줄 디자인*/
+.hr {
+    border-top: 1px black solid;
+    margin-top: 5px;
+}
+
+/* 조회할 내용 datalist 스타일*/
+.search{
+    width: 100%;
+    height: 75%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+/*datalist 내용물 가운데 정렬*/
+.SearchSelect {
+    text-align: center;
+    width: 10%;
+    height: 70%;
+}
+
+/*조회내용 select, input 스타일*/
+.SearchInput {
+    width: 20%;
+    height: 70%;
+}
+
+/*조회 버튼 스타일*/
+.SearchButton{
+    width: 10%;
+    height: 70%;
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    border-radius: 20px;
+}
+
+
+.reservationtable{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 5% 95%;
+}
+
+.firstcol {
+    font-family: 'KHNPHU';
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.firstcolTotal {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid grey;
+}

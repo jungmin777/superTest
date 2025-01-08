@@ -1,0 +1,194 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'NEXON Lv1 Gothic OTF', sans-serif !important;
+}
+
+@font-face {
+	font-family: "NEXON Lv1 Gothic OTF";
+	src:
+		url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff")
+		format("woff");
+	font-weight: normal;
+	font-style: normal
+}
+
+body {
+	background-color: #f4f7fa;
+	color: #333;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.main {
+	width: 100%;
+	height: auto;
+	max-width: 1200px;
+	margin: 0 auto;
+	margin-top: 30px;
+	padding: 40px;
+	display: flex;
+	flex-direction: column;
+	gap:20px;
+	margin-top:3%;
+}
+
+.maintop {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
+}
+
+.postTitle {
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.hr {
+	border-top: 1px #000 solid;
+	margin-top: 5px
+}
+
+.hrLight {
+	border-top: 1px #d3d3d3 solid;
+	margin-top: 10px
+}
+
+.message-info {
+	display: flex;
+	justify-content: space-between;
+	gap: 20px;
+	margin-top: 10px;
+	padding: 10px 0;
+	font-size: 14px
+}
+
+.info-box {
+	display: flex;
+	align-items: center;
+	gap: 5px
+}
+
+.info-box label {
+	font-weight: bold;
+	color: #555
+}
+
+.info-box div {
+	color: #333
+}
+
+.message-title {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin-top: 10px;
+	margin-bottom: 10px
+}
+
+.message-title label {
+	font-weight: bold;
+	color: #555
+}
+
+.message-title .content-box {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	background-color: #f9f9f9;
+	font-size: 16px;
+	line-height: 1.5;
+	color: #333
+}
+
+.message-content {
+	margin-top: 8px;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px
+}
+
+.message-content label {
+	font-weight: bold;
+	color: #555
+}
+
+.message-content .content-box {
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	background-color: #f9f9f9;
+	font-size: 16px;
+	line-height: 1.7;
+	min-height: 150px;
+	color: #333
+}
+
+.button-group {
+	margin-top: 5px;
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px
+}
+
+.action-btn {
+	width: 120px;
+	height: 40px;
+	font-size: 16px;
+	color: #fff;
+	background-color: cornflowerblue;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color .3s ease, transform .2s ease;
+}
+
+.action-btn:hover {
+    background-color: skyblue;
+    transform: scale(1.05);
+}
+
+.action-btn:active {
+	background-color: cornflowerblue;
+    transform: scale(0.95);
+}
+
+.form-control {
+	max-width:1200px;
+	max-height:300px;
+	width:100%;
+	height:100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	background-color: #f9f9f9;
+	font-size: 16px;
+	line-height: 1.5;
+	color: #333;
+	margin-top: 8px;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px
+}
+
+.answer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px; /* 간격 조정 */
+}
+
+.answerWriter {
+    font-size: 14px; /* 텍스트 크기 조정 */
+    color: #555; /* 텍스트 색상 조정 */
+}
+
+.margin {
+	height:50px;
+}

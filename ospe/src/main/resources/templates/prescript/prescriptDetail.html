@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>처방전</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/footer.css" rel="stylesheet">
+<link href="/css/header.css" rel="stylesheet">
+<link href="/css/prescript/prescript.css" rel="stylesheet">
+<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+<style>
+.btn-modern {
+    background-color: cornflowerblue;
+    color: white;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+.btn-modern:hover {
+    background-color: #4f74b7;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+</style>
+</head>
+<body>
+ 	<div th:replace="~{header :: header}"></div>
+       
+	<div class="container my-5" id="cheobang">
+		<!-- 제목 -->
+		<div class="title">처 방 전</div>
+
+		<!-- 상단 정보 -->
+		<table class="table table-bordered">
+			<tbody>
+				<tr>
+					<th style="width: 15%;">진단번호</th>
+					<td style="width: 35%;">[[${prescript.prescriptNum}]]</td>
+					<th style="width: 15%;">진단 병원</th>
+					<td style="width: 35%;">[[${prescript.hospitalName}]]</td>
+				</tr>
+				<tr>
+					<th>처방일자</th>
+					<td id="preDate"></td>
+					<th>진료과목</th>
+					<td th:text="${prescript.department}"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- 환자 정보 -->
+		<table class="table table-bordered">
+			<tbody>
+				<tr>
+					<th style="width: 15%;">성명</th>
+					<td style="width: 35%;">[[${prescript.patientName}]]</td>
+					<th style="width: 15%;">보유 병명</th>
+					<td style="width: 35%;">[[${prescript.diseases}]]</td>
+				</tr>
+				<tr>
+					<th>보유 알러지</th>
+					<td>[[${prescript.allergies}]]</td>
+					<th></th>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- 처방 의약품 정보 -->
+		<div class="section-title">처방 의약품의 명칭</div>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>의약품명</th>
+					<th>1회 투여량</th>
+					<th>횟수</th>
+					<th>일수</th>
+					<th>용법</th>
+				</tr>
+			</thead>
+			<tbody id="tbody">
+			
+			</tbody>
+		</table>
+
+		<!-- 추가 정보 -->
+		<table class="table table-bordered">
+			<tbody>
+				<tr>
+					<th style="width: 20%;">주사제 투여 내역</th>
+					<td>[[${prescript.injectionHistory}]]</td>
+				</tr>
+				<tr>
+					<th>참고 사항</th>
+					<td>[[${prescript.doctorAdvice}]]</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- 서명 및 발행 -->
+		<div class="signature-box">
+			<p class="small-text">사용기간: 처방일로부터 7일간</p>
+			<p>발행 의사: [[${prescript.doctorName}]]</p>
+			<p>발행 병원: [[${prescript.hospitalName}]]</p>
+		</div>
+	</div>
+	
+	<div th:if="${d}" style="display:flex; justify-content:center; padding-bottom:1rem;">
+		<button class="btn-modern" id="modifyBtn">수정</button>
+	</div>
+	
+	
+	<div style="display:flex; justify-content:center; padding-bottom:1rem;">
+		<button class="btn btn-secondary" onclick="printCheobang()">프린트</button> <!-- 프린트 버튼 -->
+	</div>
+	
+
+	<div th:replace="~{footer :: footer}"></div>
+
+	<script th:inline="javascript" defer>
+	// model 해온 데이터 변수에 저장
+		let prescript = /*[[${prescript}]]*/1;
+		// 날짜 split 해서 보기좋은 형태로 변환
+		const dateDiv = document.getElementById("preDate");
+		dateDiv.innerText = prescript.prescriptDate.split('T')[0];
+		let meds;
+		let othm;
+		let odhm;
+		let takeD;
+		let howEat;
+		if(prescript.medications != null){
+			 meds = prescript.medications.split("%&%"); // 약들 잘라서 배열로 변환 후 저장
+			 othm = prescript.oneTimeHowMany.split(","); // 한번 복용량 잘라서 배열로 변환 후 저장
+			 odhm = prescript.oneDayHowMany.split(","); // 하루 몇번섭취 잘라서 배열로 변환 후 저장
+			 takeD = prescript.takeDate.split(","); // 복용일수 잘라서 배열로 변환 후 저장
+			 howEat = prescript.howToEat.split(","); // 복용법 잘라서 배열로 변환 후 저장
+			
+		}
+		
+		const tbody = document.getElementById('tbody'); // 쉬운건 안 써줍니다
+		
+		for(let i = 0; i < meds.length; i++){ // 약들 자른 배열의 길이만큼 반복문하겠다
+			const tr = document.createElement('tr'); // tr 생성
+			const classes = ['meds', 'othm', 'odhm', 'takeD', 'howEat']; // 각 td들에 넣어줄 클래스이름의 배열 생성
+			classes.forEach(className => { // className 을 각각 반복하겠다
+			    const td = document.createElement('td'); // td 생성해서
+			    td.classList.add(className);  // 클래스 이름 추가
+			    tr.appendChild(td);           // <td>를 <tr> 안에 추가
+			});
+			// 여기까지 했을 때 생성되는것은
+			// tr 태그 안에 td가 classes 의 배열 길이(5) 만큼 생성됨 => (tr  -  td*5  -  /tr)
+			// 아직 반복문 안에 있음
+			tr.children[0].innerText = meds[i]; // tr.children[0] 은 첫번째 자식 td - meds 배열의 i번째 입력 
+			tr.children[1].innerText = othm[i]; // 두번째 td - othm 배열의 i번째 입력
+			tr.children[2].innerText = odhm[i]; // 세번째
+			tr.children[3].innerText = takeD[i]; // 네번째
+			tr.children[4].innerText = howEat[i]; // 다섯번째
+			tbody.appendChild(tr); // tbody 안에 tr 추가
+		}
+
+		function printCheobang() {
+		  var printContent = document.getElementById('cheobang'); // 'cheobang' id를 가진 요소 선택
+		  var printWindow = window.open('', '', 'height=800, width=600'); // 새로운 프린트 창 열기
+
+		  printWindow.document.write('<html><head><title>처방전</title>'); // HTML 시작
+		  printWindow.document.write('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">'); // Bootstrap CSS 포함
+		  printWindow.document.write('<style> .title { text-align: center; font-size: 24px; font-weight: bold; } .signature-box{text-align: right; margin-top: 2rem;}</style>'); // 제목 스타일 추가
+		  printWindow.document.write('</head><body>'); // 본문 시작
+		  printWindow.document.write(printContent.innerHTML); // 선택된 div의 내용을 프린트 창에 작성
+		  printWindow.document.write('</body></html>'); // HTML 끝
+		  printWindow.document.close(); // 문서 닫기
+		  printWindow.print(); // 프린트 창을 열기
+		}
+
+		const modify = document.getElementById("modifyBtn");
+		modify.addEventListener('click',()=>{
+			location.href = "/modifyPrescriptView/" + prescript.prescriptNum;
+		})
+	</script>
+	
+	
+</body>
+</html>

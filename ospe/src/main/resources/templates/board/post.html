@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>게시판</title>
+		<script defer src="/js/index.js"></script>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="/css/post.css">
+		<link rel="stylesheet" href="/css/header.css">
+		<link rel="stylesheet" href="/css/footer.css">
+		<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+	</head>
+	<body>
+		<div th:replace="~{header :: header}"></div> 
+		<main class="main">
+		    <!-- 메인 제목 -->
+		    <div class="maintop">
+		        <div class="postTitle">제목: <span th:text="${board.title}"></span></div>
+		        <div class="hr"></div>
+		    </div>
+		    
+		    <!-- 메시지 내용 -->
+		    <div class="message-view-container">
+		        <!-- 게시자, 날짜 -->
+		        <div class="message-info">
+		            <div class="info-box">
+		                <label for="receiver">게시자 :</label>
+		                <div id="receiver" th:text="${board.author.name}"></div>
+		            </div>
+		            <div class="info-box">
+		                <label for="date">날짜 :</label>
+		                <div id="date" th:text="${#dates.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
+		            </div>
+		        </div>
+		        
+		        <div class="hrLight"></div>
+		
+		        <!-- 내용 -->
+		        <div class="message-content">
+		            <div id="Content" th:text="${board.content}"></div>
+		        </div>
+				
+				<div class="margin"></div>
+				<div class="margin"></div>
+				
+				<!-- 버튼 -->
+				<div class="button-group">
+				    <!-- 삭제 버튼: 로그인한 사용자와 작성자가 동일할 때만 렌더링 -->
+				    <div th:if="${loggedInUserId == board.author.id}">
+				        <form th:action="@{/post/{id}/delete(id=${board.id})}" method="post" onsubmit="return confirmDelete();">
+				            <button type="submit" class="action-btn">삭제</button>
+				        </form>
+				    </div>
+				    <!-- 뒤로가기 버튼 -->
+				    <form action="/board_home">
+				        <button type="submit" class="action-btn">뒤로가기</button>
+				    </form>
+				</div>
+		    </div>
+		    
+		    <div style="height: 20px;"></div>
+		    
+		    <!-- 메인 제목 -->
+			<div class="maintop">
+			    <div class="answer-header">
+			        <div class="postTitle">답변</div>
+			        <div class="answerWriter" th:if="${board.answerWriter != null}">
+			            작성자: <span th:text="${board.answerWriter} + ' 의사'"></span>
+			        </div>
+			    </div>
+			    <div class="hr"></div>
+			</div>
+ 			<!-- 답변 내용 -->
+			<div class="answer-section">
+			    <div id="answer" class="content-box" th:text="${board.answer != null ? board.answer : '답변이 없습니다.'}"></div>
+			</div>
+	
+			<!-- 답변 작성 (로그인한 사용자만 가능 & 환자가 아닐 경우) -->
+			<div th:if="${loggedIn} and !${isPatient}">
+				<div class="hrLight"></div>
+			    <form th:action="@{/post/{id}/answer(id=${board.id})}" method="post">
+			        <div class="form-group">
+			            <input type="text" id="answerInput" name="answer" class="form-control" placeholder="답변을 입력하세요.">
+			        </div>
+			        <div class="button-group">
+			            <button type="submit" class="action-btn">답변 저장</button>
+			        </div>
+			    </form>
+			</div>	
+		</main>
+		<div th:replace="~{footer :: footer}"></div>
+		<script>
+    		function confirmDelete() {
+        		return confirm("정말로 삭제하시겠습니까?"); // 확인 창 표시
+    		}
+		</script>
+	</body>
+</html>

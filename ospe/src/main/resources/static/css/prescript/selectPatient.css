@@ -1,0 +1,97 @@
+@charset "UTF-8";
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   font-family: "NEXON Lv1 Gothic OTF"
+}
+
+@font-face {
+   font-family: "NEXON Lv1 Gothic OTF";
+   src:
+      url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff")
+      format("woff");
+   font-weight: normal;
+   font-style: normal
+}
+
+html {
+   width: 100vw;
+}
+
+body {
+   background-color: #f4f7fa;
+   color: #333;
+   margin: 0;
+   padding: 0;
+   width: 100%;
+   height: 100%
+}
+.hr {
+	border-top: 1px solid black;
+	margin-top: 5px
+}
+.searchTitle {
+	font-weight: bold;
+	font-size: 20px;
+	margin-left: 40px
+}
+#searchPatient{background-color:white}
+.firstcolTotal{
+	grid-template-columns:2fr 2fr 2fr;
+	display:grid;
+	margin-bottom:2rem;
+	align-items: center;
+    text-align: center;
+}
+#writeBtn{
+	width:140px;
+}
+
+.main {
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 테이블을 감싸는 div에 대한 기본 스타일 */
+.table-wrapper {
+    max-height: none;  /* 기본적으로 스크롤 없음 */
+    overflow-y: hidden;  /* 기본적으로 수직 스크롤 숨김 */
+    transition: max-height 0.3s ease, overflow-y 0.3s ease;
+}
+
+#patientTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#patientTable th, #patientTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#patientTable th {
+    background-color: #f2f2f2;
+}
+
+.btn-modern {
+    background-color: cornflowerblue;
+    color: white;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.btn-modern:hover {
+    background-color: #4f74b7;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

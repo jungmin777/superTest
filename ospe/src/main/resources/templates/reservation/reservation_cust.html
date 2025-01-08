@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>진료예약</title>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="/css/reservation/reservation_cust.min.css" />
+<script defer src="/js/reservation/reservation_cust.js"></script>
+<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+</head>
+<body>
+   <!-- 헤더 -->
+   <div th:replace="~{header :: header}"></div>
+
+   <!-- body -->
+   <main class="main">
+      <!-- 메인 제목(예약하기) -->
+      <div class="maintop">
+         <div class="searchTitle">진료 예약</div>
+         <div class="hr"></div>
+      </div>
+      <div class="calline">
+         <div class="calendar">
+            <!-- 달력헤더 부분 -->
+            <div class="cal_header">
+               <!-- 이전/다음 버튼 svg로 생성 -->
+               <button id="prev">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                     fill="white" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
+                  </svg>
+               </button>
+               <span id="month-year"></span>
+               <button id="next">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                     fill="white" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z" />
+                  </svg>
+               </button>
+            </div>
+            <!-- 달력 요일 부분 -->
+            <div class="cal_main">
+               <span class="sunday">일</span> <span>월</span> <span>화</span> <span>수</span>
+               <span>목</span> <span>금</span> <span class="saturday">토</span>
+            </div>
+            <!-- 날짜(일) 부분 생성될 div (js로 안에 .day 생성 예정) -->
+            <div class="days" id="cal_days"></div>
+         </div>
+         <!-- 예약 시간  -->
+         <div class="TimeAndButton">
+         <div class="reservationtime">
+         <span class="department">
+         <span>진료과목</span>
+          <select class="departmentSelect" id="departmentselect">
+               <option class="option" value="내과">내과</option>
+               <option class="option" value="정형외과">정형외과</option>   
+               <option class="option" value="신경외과">신경외과</option>   
+               <option class="option" value="치과">치과</option>   
+               <option class="option" value="안과">안과</option>   
+               <option class="option" value="건강검진센터">건강검진센터</option>   
+            </select>
+            </span>
+            <hr class="hr"/>
+      </div>
+            <div class="reservationtime"><span>예약시간</span><hr class="hr"/> </div>
+            <div class="Timeblock">
+               <button class="times" disabled>9:00</button>
+               <button class="times" disabled>10:00</button>
+               <button class="times" disabled>11:00</button>
+               <button class="times" disabled>12:00</button>
+               <button class="times" disabled>13:00</button>
+               <button class="times" disabled>14:00</button>
+               <button class="times" disabled>15:00</button>
+               <button class="times" disabled>16:00</button>
+               <button class="times" disabled>17:00</button>
+            </div>
+            <!-- 예약 버튼 -->
+            
+            <form class="reservationbutton" action="/search_cust" id="ReservationResult" method="post">
+               <input type="hidden" name="Department" value="내과"/>
+               <input type="hidden" name="ResultReservationDay"/>
+               <input type="hidden" name="ResultReservationTime"/>
+               <button class="btn-3d blue" type="submit" id="reservation" disabled>예약</button>
+            </form>
+         </div>
+      </div>
+      <div class="notice">
+         <span>※당일/주말 예약은 불가능합니다.</span>
+         <span>※다른 문의사항은 대표번호로 전화 부탁드립니다.</span>
+      </div>
+      <input type="hidden" />
+   </main>
+
+   <!-- 푸터 -->
+   <div th:replace="~{footer :: footer}"></div>
+
+
+</body>
+</html>

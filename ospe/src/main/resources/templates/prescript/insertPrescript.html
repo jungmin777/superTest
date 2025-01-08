@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>처방전</title>
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="/css/footer.css" rel="stylesheet">
+<link href="/css/header.css" rel="stylesheet">
+<link href="/css/prescript/prescript.css" rel="stylesheet">
+<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+<script src="/js/prescript/insertPrescript.js" defer></script>
+<style>
+	input{border:none; width:100%;}
+.btn-modern {
+    background-color: cornflowerblue;
+    color: white;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+.btn-modern:hover {
+    background-color: #4f74b7;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.btn-warn {
+	background-color: firebrick;
+    color: white;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+.btn-warn:hover {
+	background-color: #791515;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+</style>
+</head>
+<body>
+ 	<div th:replace="~{header :: header}"></div>
+
+
+	<form action="/insertPrescript" method="get" id="insertForm">       
+		<div class="container my-5" id="cheobang">
+			<!-- 제목 -->
+			<div class="title">처 방 전</div>
+	
+			<!-- 상단 정보 -->
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<th style="width: 15%;">진단번호</th>
+						<td style="width: 35%;">추후 자동생성 예정</td>
+						<th style="width: 15%;">진단 병원</th>
+						<td style="width: 35%;">[[${doctor.hospitalName}]]</td>
+					</tr>
+					<tr>
+						<th>처방일자</th>
+						<td id="today"></td>
+						<th>진료과목</th>
+						<td>[[${doctor.specialty}]]</td>
+					</tr>
+				</tbody>
+			</table>
+	
+			<!-- 환자 정보 -->
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<th style="width: 15%;">환자 성명</th>
+						<td style="width: 35%;">[[${patient.name}]]</td>
+						<th style="width: 15%;">보유 병명</th>
+						<td style="width: 35%;">[[${patient.diseases}]]</td>
+					</tr>
+					<tr>
+						<th>보유 알러지</th>
+						<td>[[${patient.allergies}]]</td>
+						<th></th>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+	
+			<!-- 처방 의약품 정보 -->
+			<div class="section-title">처방 의약품의 명칭</div>
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th class="medications">의약품명</th>
+						<th class="oneTime">1회 섭취량</th>
+						<th class="oneDay">하루 복용 횟수</th>
+						<th class="takeDate">복용일</th>
+						<th class="howToEat">용법</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="medicTr" class="medication-row">
+					    <td class="medications">
+					        <input class="medics" style="width:100%;" placeholder="약 종류 입력" required />
+					    </td>
+					    <td class="oneTime">
+					        <input name="oneTimeHowMany" type="text" placeholder="ex) 10mg" />
+					    </td>
+					    <td class="oneDay">
+					        <input name="oneDayHowMany" type="number" placeholder="ex) 하루 3번 = 3" />
+					    </td>
+					    <td class="takeDate">
+					        <input name="takeDate" type="number" placeholder="ex) 5" />
+					    </td>
+					    <td class="howToEat">
+					    	<select id="selectHowToEat">
+					    		<option>식사 전</option>
+					    		<option>식사 후 바로</option>
+					    		<option>식사 후 15분 이내</option>
+					    		<option>식사 후 30분 이내</option>
+					    		<option>식사 후 30분 이후</option>
+					    	</select>
+					        <input id="howToEat" name="howToEat" type="hidden" value="식사 전"/>
+					    </td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<div id="plusBtnDiv">
+				<button type="button" class="btn-warn" id="deleteBtn">약 삭제</button>
+				<button type="button" class="btn-modern" id="plusBtn">약 추가</button>
+			</div>
+			
+			<!-- 추가 정보 -->
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<th style="width:30%">주사제 투여 내역</th>
+						<td>
+							<input name="injectionHistory" value="수정 가능" placeholder="없을시 없음 입력" required/>
+						</td>
+					</tr>
+					<tr>
+						<th>참고 사항</th>
+						<td>
+							<input name="doctorAdvice" value="수정 가능" placeholder="없을시 없음 입력" required/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	
+			<!-- 서명 및 발행 -->
+			<div class="signature-box">
+				<p class="small-text">사용기간: 처방일로부터 7일간</p>
+				<p>발행 의사: [[${doctor.name}]]</p>
+				<p>발행 병원: [[${doctor.hospitalName}]]</p>
+			</div>
+			<div id="insertButtonDiv">
+				<button id="submitBtn" type="button" class="btn-modern">처방하기</button>
+			</div>
+		</div>
+		<input type="hidden" name="hospitalName" th:value="${doctor.hospitalName}">
+		<input type="hidden" name="hospitalAddress" th:value="${doctor.hospitalAddress}">
+		<input id="medications" type="hidden" name="medications">
+		<input type="hidden" name="preDate">
+		<input type="hidden" name="allergies" th:value="${patient.allergies}">
+		<input type="hidden" name="doctorName" th:value="${doctor.name}">
+		<input type="hidden" name="patientDiseases" th:value=${patient.diseases}>
+		<input type="hidden" name="patientName" th:value="${patient.name}">
+		<input type="hidden" name="department" th:value="${doctor.specialty}">
+		<input type="hidden" name="patientNum" th:value="${patient.id}">
+	</form>
+
+	<div th:replace="~{footer :: footer}"></div>
+
+
+</body>
+</html>

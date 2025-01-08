@@ -1,0 +1,69 @@
+/* 슬라이드 컨테이너 크기 설정 */
+.slider-container {
+    position: relative;
+    width: 100%; /* 슬라이드 전체 영역을 50% 크기로 설정 */
+    margin: auto;
+    overflow: hidden;
+    margin-top: 30px;
+    max-width: 1200px;
+}
+
+/* 슬라이드 이미지 영역 */
+.slider-images {
+    display: flex;
+    transition: transform 0.5s ease; /* 부드러운 슬라이드 전환 효과 */
+    width: 300%; /* 3개의 이미지를 한 번에 표시하기 위해 3배 크기로 설정 */
+}
+
+/* 각 이미지 크기 고정 */
+.slider-images img {
+    width: 34%; /* 각 이미지가 1/3 크기씩 차지하게 설정 */
+    height: auto;  /* 비율에 맞게 세로 크기도 자동으로 맞춰짐 */
+    object-fit: cover; /* 이미지가 영역을 채우도록 함 */
+}
+
+/* 좌, 우 버튼 */
+button {
+    position: absolute;
+    top: 35%;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 18px;
+    padding: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.prev {
+    left: 0;
+}
+
+.next {
+    right: 0;
+}
+
+/* 도트 버튼 */
+.dots {
+    text-align: center;
+    padding: 20px;
+}
+
+.dot {
+    height: 15px;
+    width: 15px;
+    margin: 0 5px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+    cursor: pointer;
+}
+
+.dot.active {
+    background-color: #717171;
+}

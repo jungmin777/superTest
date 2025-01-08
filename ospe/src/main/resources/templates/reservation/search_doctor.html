@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/css/reservation/search_doctor.min.css">
+<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+<script defer src="/js/reservation/search_doctor.js"></script>
+<title>예약조회</title>
+</head>
+<body>
+	<!-- 헤더 -->
+	<div th:replace="~{header :: header}"></div>
+
+	<main class="main">
+		<!-- 메인 제목(예약조회) -->
+		<div class="maintop">
+			<div class="searchTitle">예약 조회</div>
+			<div class="hr"></div>
+		</div>
+		<!-- 조회할 내용 -->
+		<div class="search">
+			<form method="get" action="/search_doctor" class="searchdropdown">
+				<select class="SearchSelect" name="searchselectoption">
+					<option value="예약번호">예약번호</option>
+					<option value="회원명">회원명</option>
+					<option value="예약일">예약일</option>
+				</select> <input type="hidden" name="searchselect" value="예약번호" /> <input
+					type="search" class="SearchInput" name="searchinput" />
+				<button type="submit" class="SearchButton">조회</button>
+			</form>
+		</div>
+		<!-- 조회 내역 생성 부분 -->
+		<div class="reservationtable">
+			<div class="firstcolTotal">
+				<span class="firstcol">예약번호</span> <span class="firstcol">회원명</span>
+				<span class="firstcol">예약일</span> <span class="firstcol">예약시간</span>
+			</div>
+			<div class="messagelist" th:each="content:${doctorboards}">
+				<span class="message" th:text="${content.reservationId}"></span>
+				<!-- 예약번호 표시 -->
+				<span class="message" th:text="${content.reservationUsername}"></span>
+				<!-- 예약자 이름 표시 -->
+				<span class="message ReservationDate"
+					th:text="${content.reservationDay}"></span>
+				<!-- 예약일 표시 -->
+				<span class="message" th:text="${content.reservationTime}"></span>
+				<!-- 예약시간 표시 -->
+			</div>
+
+		</div>
+	</main>
+
+	<!-- 페이지네이션 -->
+	<div class="container" th:if="${totalPages > 1}">
+		<nav aria-label="Page navigation">
+			<ul class="pagination">
+				<!-- 이전 버튼 -->
+				<li class="page-item"
+					th:classappend="${currentPage == 1} ? 'disabled' : ''"><a
+					class="page-link" th:if="${currentPage > 1}"
+					th:href="@{/search_doctor(page=${currentPage - 1}, searchselect=${searchselect}, searchinput=${searchinput})}"
+					aria-label="Previous"> &lt; </a></li>
+				<!-- 페이지 번호 -->
+				<li class="page-item"
+					th:each="i : ${#numbers.sequence(startPage, endPage)}"
+					th:classappend="${i == currentPage} ? 'active' : ''"><a
+					class="page-link"
+					th:href="@{/search_doctor(page=${i}, searchselect=${searchselect}, searchinput=${searchinput})}"
+					th:text="${i}"></a></li>
+				<!-- 다음 버튼 -->
+				<li class="page-item"
+					th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+					<a class="page-link" th:if="${currentPage < totalPages}"
+					th:href="@{/search_doctor(page=${currentPage + 1}, searchselect=${searchselect}, searchinput=${searchinput})}"
+					aria-label="Next"> &gt; </a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+
+
+
+	<!-- 푸터 -->
+	<div th:replace="~{footer :: footer}"></div>
+
+</body>
+</html>

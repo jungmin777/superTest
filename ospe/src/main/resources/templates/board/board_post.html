@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>게시판</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/board/board_post.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+</head>
+<body onload="checkDraft()">
+    <div th:replace="~{header :: header}"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Main Title -->
+        <div class="maintop">
+            <div class="boardPostTitle">게시글 작성하기</div>
+            <div class="hr"></div>
+        </div>
+        <!-- Message Form -->
+        <div class="message-container">
+            <form id="postForm" th:action="@{/board_post}" method="post" th:object="${boardPost}" onsubmit="return confirmPost()">
+                <div class="form-group author-group">
+					<div class="form-label" id="Author" th:text="'게시자 : ' + *{author.name}"></div>
+				</div>
+                
+                <div class="form-group">
+                    <label for="Title" class="form-label">제목</label>
+                    <input type="text" class="form-control" id="Title" th:field="*{title}" placeholder="제목" required>
+                </div>
+                <div class="form-group">
+                    <label for="Content" class="form-label">내용 입력</label>
+                    <textarea class="form-control content-box" id="Content" th:field="*{content}" rows="10" placeholder="내용을 입력하세요..." required></textarea>
+                </div>
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button type="submit" class="action-btn">게시하기</button>
+                    <button type="button" class="action-btn" onclick="saveDraft()">임시저장</button>
+                    <button type="button" class="action-btn" onclick="cancelPost()">취소</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div th:replace="~{footer :: footer}"></div>
+
+    <!-- JavaScript -->
+	<script>
+	    // 페이지 로드 시 임시 저장 데이터 확인
+	    function checkDraft() {
+	        const title = localStorage.getItem('draftTitle');
+	        const content = localStorage.getItem('draftContent');
+	
+	        if (title || content) {
+	            const userChoice = confirm('임시 저장된 게시글을 불러오겠습니까? \n취소를 누르시면 저장된 게시글은 삭제됩니다.');
+	            if (userChoice) {
+	                // 불러오기
+	                document.getElementById('Title').value = title || '';
+	                document.getElementById('Content').value = content || '';
+	            } else {
+	                // 삭제
+	                localStorage.removeItem('draftTitle');
+	                localStorage.removeItem('draftContent');
+	            }
+	        }
+	    }
+	
+	    // 임시 저장 기능: 입력 데이터를 LocalStorage에 저장 후 board_home으로 이동
+	    function saveDraft() {
+	        const title = document.getElementById('Title').value;
+	        const content = document.getElementById('Content').value;
+	
+	        localStorage.setItem('draftTitle', title);
+	        localStorage.setItem('draftContent', content);
+	
+	        alert('임시 저장되었습니다.');
+	        // board_home으로 리다이렉트
+	        window.location.href = '/board_home';
+	    }
+	
+	    // 게시하기 버튼 클릭 시 확인 팝업 및 성공 팝업 처리
+	    function confirmPost() {
+	        if (confirm("게시하시겠습니까?")) {
+	            alert("게시가 완료되었습니다.");
+	            return true; // 폼 전송 허용
+	        }
+	        return false; // 폼 전송 취소
+	    }
+	
+	    // 작성 취소
+	    function cancelPost() {
+	        if (confirm('작성을 취소하시겠습니까?')) {
+	            window.location.href = '/board_home';
+	        }
+	    }
+	</script>
+</body>
+</html>

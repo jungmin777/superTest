@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/board/board_home.css">
+    <link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+    <title>게시판</title>
+</head>
+<body>
+    <div th:replace="~{header :: header}"></div>
+    
+    <main class="main">
+        <div class="maintop">
+            <div class="searchTitle">Q&A 게시판</div>
+            <div class="hr"></div>
+        </div>
+        <div class="search">
+            <!-- 검색 폼 -->
+            <form class="searchdropdown" action="/board_home" method="get" id="searchForm">
+                <!-- 검색 조건 -->
+                <select class="SearchSelect" name="searchselect">
+                    <option value="제목/내용">제목/내용</option>
+                    <option value="작성자">작성자</option>
+                </select>
+                <!-- 검색 입력 -->
+                <input class="SearchInput" name="searchinput" type="text" />
+                <!-- 검색 버튼 -->
+                <button type="submit" class="SearchButton">조회</button>
+            </form>
+        </div>
+
+        <div class="boardtable">
+            <div class="firstcolTotal">
+                <span class="firstcol">제목</span>
+                <span class="firstcol">작성자</span>
+                <span class="firstcol">게시일</span>
+                <span class="firstcol">선택</span>
+            </div>
+            <div th:each="board : ${boards}" class="messagelist">
+                <span class="message">
+                    <a class="title" th:href="@{/post/{id}(id=${board.id})}" th:text="${board.title}">제목</a>
+                </span>
+                <span class="message">
+                    <a class="poster" th:href="@{/post/{id}(id=${board.id})}" th:text="${board.author.name}">작성자</a>
+                </span>
+                <span class="message date" th:text="${board.createdDateFormatted}">게시일</span>
+                <span class="message">
+                    <!-- 체크박스: 게시글 ID 저장 -->
+                    <input class="form-control" type="checkbox" name="selectedBoards" th:value="${board.id}" />
+                </span>
+            </div>
+        </div>
+        <div class="action_btnall" th:if="!${isDoctor}">
+		    <!-- 삭제 버튼 -->
+		    <form action="/board_home" method="get">
+		        <button class="action-btn" type="button" onclick="deleteSelected()">삭제</button>
+		    </form>
+		    <!-- 게시 버튼 -->
+		    <form action="/board_post" method="get">
+		        <button class="action-btn" type="submit">게시</button>
+		    </form>
+		</div>
+
+        <!-- 페이지네이션 -->
+		<div class="container" th:if="${totalPages > 1}">
+		    <nav aria-label="Page navigation">
+		        <ul class="pagination">
+		            <!-- 이전 버튼 -->
+		            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+		                <a class="page-link"
+		                   th:if="${currentPage > 1}"
+		                   th:href="@{/board_home(page=${currentPage - 1}, searchselect=${searchselect}, searchinput=${searchinput})}" 
+		                   aria-label="Previous">
+		                    &lt;
+		                </a>
+		            </li>
+		            <!-- 페이지 번호 -->
+		            <li class="page-item" th:each="i : ${#numbers.sequence(startPage, endPage)}"
+		                th:classappend="${i == currentPage} ? 'active' : ''">
+		                <a class="page-link" 
+		                   th:href="@{/board_home(page=${i}, searchselect=${searchselect}, searchinput=${searchinput})}" 
+		                   th:text="${i}"></a>
+		            </li>
+		            <!-- 다음 버튼 -->
+		            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+		                <a class="page-link"
+		                   th:if="${currentPage < totalPages}"
+		                   th:href="@{/board_home(page=${currentPage + 1}, searchselect=${searchselect}, searchinput=${searchinput})}" 
+		                   aria-label="Next">
+		                    &gt;
+		                </a>
+		            </li>
+		        </ul>
+		    </nav>
+		</div>
+    </main>
+    
+    <div style="height: 200px;"></div>
+    <div th:replace="~{footer :: footer}"></div>
+    
+    <!-- JavaScript -->
+    <script>
+    function deleteSelected() {
+        const selectedIds = Array.from(document.querySelectorAll('input[name="selectedBoards"]:checked'))
+            .map(checkbox => checkbox.value);
+
+        if (selectedIds.length === 0) {
+            alert("삭제할 게시글을 선택하세요.");
+            return;
+        }
+
+        if (!confirm("선택한 게시글을 삭제하시겠습니까?")) {
+            return;
+        }
+
+        fetch('/deleteBoards', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ids: selectedIds })
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("선택한 게시글이 삭제되었습니다.");
+                location.reload();
+            } else if (response.status === 403) {
+                alert("본인이 작성한 게시글만 삭제할 수 있습니다.");
+            } else {
+                alert("게시글 삭제 중 오류가 발생했습니다.");
+            }
+        })
+        .catch(error => {
+            console.error("통신 오류:", error);
+            alert("서버와의 통신 중 오류가 발생했습니다.");
+        });
+    }
+    </script>
+    <script>
+    let currentPage = 1;
+    let totalPages = 1; // 서버에서 가져오는 총 페이지 수
+    let startPage = 1;
+    let endPage = 10;
+
+    function loadPage(page) {
+        if (page < 1 || page > totalPages) return;
+
+        // 페이지가 현재 범위의 끝에 도달했을 경우
+        if (page > endPage) {
+            startPage += 10;
+            endPage = Math.min(startPage + 9, totalPages);
+        } else if (page < startPage) {
+            startPage = Math.max(1, startPage - 10);
+            endPage = startPage + 9;
+        }
+
+        currentPage = page;
+        window.location.href = `/board_home?page=${page}`;
+    }   
+    </script>
+</body>
+</html>

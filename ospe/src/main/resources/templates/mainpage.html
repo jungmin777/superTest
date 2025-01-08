@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>OSPE</title>
+<link rel="stylesheet" href="/css/header.css">
+<link rel="stylesheet" href="/css/footer.css">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/mainslider.css">
+<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+<script src="/js/slider.js"></script>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+	rel="stylesheet">
+<style>
+</style>
+</head>
+<body>
+	<div th:replace="~{header :: header}"></div>
+
+	<!-- 사진 슬라이더 -->
+	<div class="slider-container">
+		<div class="slider-images">
+			<img src="/image/guide1.png" alt="Ospe 가이드 이미지 1" class="guide1">
+			<img src="/image/guide2.png" alt="Ospe 가이드 이미지 2" class="guide2">
+			<img src="/image/guide3.png" alt="Ospe 가이드 이미지 3" class="guide3">
+		</div>
+		<!-- 좌, 우 버튼 -->
+		<button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+		<button class="next" onclick="moveSlide(1)">&#10095;</button>
+
+		<!-- 도트 버튼 -->
+		<div class="dots">
+			<span class="dot" onclick="currentSlide(1)"></span> <span class="dot"
+				onclick="currentSlide(2)"></span> <span class="dot"
+				onclick="currentSlide(3)"></span>
+		</div>
+	</div>
+
+	<!-- 본문 콘텐츠 -->
+	<main class="main-content" style=" margin-bottom:2%">
+	
+	<div class="back-content">
+	
+		<!-- 진료 기능 그리드 -->
+		<section class="main-grid">
+			<div class="grid-container" style="margin-top:2%">
+				<div class="grid-item">
+				    <i class="fas fa-calendar-alt"></i> <!-- 아이콘 -->
+				    <span>진료예약</span>
+				    <a th:if="${roles} == 'ADMIN'" href='/search_doctor' class="add-button">+</a>
+				    <a th:if="${roles} != 'ADMIN'" href='/search_cust' class="add-button">+</a>
+				    <!-- DB 미리보기 내용 추가 -->
+				    <div class="db-preview">
+				        <div class="boardtable">
+				            <div class="firstcolTotal">
+				                <span class="firstcol">진료과목</span>
+				                <span class="firstcol">예약일</span>
+				            </div>
+				            <div th:if="${reservations != null and !#lists.isEmpty(reservations)}" th:each="reservation : ${reservations}" class="messagelist">
+				                <span class="message">
+				                    <a class="department" th:text="${reservation.department}">진료과목</a>
+				                </span>
+				                <span class="message">
+				                    <a class="reservation-day" th:text="${reservation.reservationDay}">예약일</a>
+				                </span>
+				            </div>
+				            <div th:unless="${reservations != null and !#lists.isEmpty(reservations)}">
+				                <p style="color: black; margin-top:3px;">예약된 진료가 없습니다.</p>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				<div class="grid-item">
+				    <i class="fas fa-prescription-bottle-alt"></i> 
+				    <span>처방전</span>
+				    <a th:href="@{/preList}" class="add-button">+</a>
+				    <!-- DB 미리보기 내용 추가 -->
+				    <div class="db-preview">
+				        <div class="boardtable">
+				            <div class="firstcolTotal">
+				                <span class="firstcol">담당 의사</span>
+				                <span class="firstcol">진료 날짜</span>
+				            </div>
+				            <div th:if="${prescripts != null and !#lists.isEmpty(prescripts)}" th:each="prescript : ${prescripts}" class="messagelist">
+				                <span class="message">
+				                    <a th:href="@{/prescriptDetail/{id}(id=${prescript.prescriptNum})}" th:text="${prescript.doctorName}"></a>
+				                </span>
+				                <span class="message">
+				                    <a th:href="@{/prescriptDetail/{id}(id=${prescript.prescriptNum})}" th:text="${#dates.format(prescript.prescriptDate, 'yyyy-MM-dd')}"></a>
+				                </span>
+				            </div>
+				            <div th:unless="${prescripts != null and !#lists.isEmpty(prescripts)}">
+				                <p style="color: black; margin-top:3px;">처방전이 없습니다.</p>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				<div class="grid-item">
+				    <i class="fas fa-comments"></i> <!-- 아이콘 -->
+				    <span>Q&A 게시판</span> 
+				    <a href="/board_home" class="add-button">+</a>
+				    <!-- DB 미리보기 내용 추가 -->
+				    <div class="db-preview">
+				        <div class="boardtable">
+				            <div class="firstcolTotal">
+				                <span class="firstcol">제목</span>
+				                <span class="firstcol">작성자</span>
+				            </div>
+				            <div th:if="${boards != null and !#lists.isEmpty(boards)}" th:each="board : ${boards}" class="messagelist">
+				                <span class="message">
+				                    <a class="title" th:href="@{/post/{id}(id=${board.id})}" th:text="${board.title}">제목</a>
+				                </span>
+				                <span class="message">
+				                    <a class="poster" th:href="@{/post/{id}(id=${board.id})}" th:text="${board.author.name}">작성자</a>
+				                </span>
+				            </div>
+				            <div th:unless="${boards != null and !#lists.isEmpty(boards)}">
+				                <p style="color: black; margin-top:3px;">게시판 글이 없습니다.</p>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				<div class="grid-item">
+				    <i class="fas fa-envelope"></i> <!-- 아이콘 -->
+				    <span>쪽지</span>
+				    <a href="/messages/message_home" class="add-button">+</a>
+				    <!-- DB 미리보기 내용 추가 -->
+				    <div class="db-preview">
+				        <div class="boardtable">
+				            <div class="firstcolTotal">
+				                <span class="firstcol">제목</span>
+				                <span class="firstcol">날짜</span>
+				            </div>
+				            <div th:if="${messages != null and !#lists.isEmpty(messages)}" th:each="message : ${messages}" class="messagelist">
+				                <span class="message">
+				                    <a class="title" th:href="@{/messages/message/{id}(id=${message.id})}" th:text="${message.title}">제목</a>
+				                </span>
+				                <span class="message">
+				                    <a class="date" th:href="@{/messages/message/{id}(id=${message.id})}" th:text="${message.sendDateFormatted}">날짜</a>
+				                </span>
+				            </div>
+				            <div th:unless="${messages != null and !#lists.isEmpty(messages)}">
+				                <p style="color: black; margin-top:3px;">쪽지가 없습니다.</p>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+			</div>
+		</section>
+	</div>
+	</main>
+
+	<div th:replace="~{footer :: footer}"></div>
+    
+</body>
+</html>

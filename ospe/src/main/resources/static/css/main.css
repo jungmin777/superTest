@@ -1,0 +1,203 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'NEXON Lv1 Gothic OTF', sans-serif;
+}
+
+@font-face {
+	font-family: "NEXON Lv1 Gothic OTF";
+	src:
+		url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff")
+		format("woff");
+	font-weight: normal;
+	font-style: normal
+}
+
+/* 전체 페이지에 NEXON 폰트 적용 */
+body {
+    font-family: 'NEXON Lv1 Gothic OTF', sans-serif;
+    background-color: #f0f0f0;
+    margin-top: 500px
+}
+
+/* 메인 콘텐츠 스타일 */
+.main-content {
+    padding: 20px;
+}
+
+/* 그리드 스타일 */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 x 2 형태 */
+    grid-template-rows: auto;
+    gap: 80px;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+/* 각 카드 스타일 */
+.grid-item {
+    position: relative; /* + 버튼을 절대값으로 위치시키기 위한 설정 */
+    color: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 400px; /* 카드 높이를 일정하게 설정 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* + 버튼을 카드 내에서 절대 위치시키기 위함 */
+}
+
+/* 각 카드의 배경색 */
+.grid-item:nth-child(1) {
+    background-color: #C4BEE2; /* 밝은 녹색 */
+}
+
+.grid-item:nth-child(2) {
+    background-color: #FFB97B; /* 밝은 파란색 */
+}
+
+.grid-item:nth-child(3) {
+    background-color: #9DB6CF; /* 밝은 노란색 */
+}
+
+.grid-item:nth-child(4) {
+    background-color: #AEAEB2; /* 따뜻한 오렌지색 */
+}
+
+
+
+/* 카드 hover 효과 */
+.grid-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* 카드 내 텍스트 스타일 */
+.grid-item span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 아이콘 스타일 */
+.grid-item i {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+/* DB 미리보기 영역 */
+.grid-item .db-preview {
+    background-color: white; /* DB 미리보기 배경 */
+    color: cornflowerblue; /* DB 미리보기 글자색 */
+    padding: 10px;
+    margin-top: 20px; /* 카드와 미리보기 칸 사이의 간격 */
+    border-radius: 5px;
+    font-size: 14px;
+    height: 200px; /* 기존보다 높이를 줄여서 직사각형 형태로 만들기 */
+    width: 80%; /* 카드보다 작게 폭을 설정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가 */
+    margin-left: auto; /* 오른쪽 정렬 */
+    margin-right: auto; /* 왼쪽 정렬 */
+}
+
+
+/* + 버튼 기본 스타일 */
+.add-button {
+    position: absolute; /* 카드 내에서 위치를 절대값으로 지정 */
+    top: 10px;
+    right: 10px; /* 오른쪽 상단에 위치 */
+    background: none; /* 배경색 제거 */
+    color: white; /* 글씨색은 흰색 */
+    border: none; /* 윤곽선 제거 */
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    text-decoration: none; /* 언더바 제거 */
+    transform: translateX(-10px); /* X축으로 5px 왼쪽으로 이동 */
+}
+
+
+
+/* + 버튼 hover 시 스타일 */
+.add-button:hover {
+    color: #808080; /* hover 시 글씨 색을 회색으로 변경 */
+}
+
+/* 메인 페이지 미리보기 스타일 */
+/* .db-preview {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    max-height: 150px;
+} */
+
+/* 테이블 스타일 */
+.db-preview .boardtable {
+    width: 100%;
+    display: grid;
+    grid-auto-rows: auto;
+    gap: 5px;
+}
+
+/* 제목과 작성자 헤더 */
+.db-preview .firstcolTotal {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 제목과 작성자 간 비율 */
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* 데이터 행 */
+.db-preview .messagelist {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 제목과 작성자 간 비율 동일 */
+    align-items: center;
+    text-align: center;
+    padding: 5px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.db-preview .messagelist:last-child {
+    border-bottom: none;
+}
+
+/* 개별 메시지 */
+.db-preview .message {
+    font-size: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* 링크 스타일 */
+.db-preview .message a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.db-preview .message a:hover {
+    color: cornflowerblue;
+}
+
+/* 미디어 쿼리 */
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr; /* 작은 화면에서는 한 열 */
+    }
+}

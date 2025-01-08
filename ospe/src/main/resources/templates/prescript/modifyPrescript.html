@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>처방전</title>
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="/css/footer.css" rel="stylesheet">
+<link href="/css/header.css" rel="stylesheet">
+<link href="/css/prescript/prescript.css" rel="stylesheet">
+<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+<script src="/js/prescript/modifyPrescript.js" defer></script>
+<style>
+	input{border:none; width:100%;}
+.btn-modern {
+    background-color: cornflowerblue;
+    color: white;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+.btn-modern:hover {
+    background-color: #4f74b7;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.btn-warn {
+	background-color: firebrick;
+    color: white;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+.btn-warn:hover {
+	background-color: #791515;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+</style>
+</head>
+<body>
+ 	<div th:replace="~{header :: header}"></div>
+
+
+	<form action="/modifyPrescript" method="get" id="insertForm">       
+		<div class="container my-5" id="cheobang">
+			<!-- 제목 -->
+			<div class="title">처 방 전</div>
+	
+			<!-- 상단 정보 -->
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<th style="width: 15%;">진단번호</th>
+						<td style="width: 35%;">[[${prescript.prescriptNum}]]</td>
+						<th style="width: 15%;">진단 병원</th>
+						<td style="width: 35%;">[[${prescript.hospitalName}]]</td>
+					</tr>
+					<tr>
+						<th>처방일자</th>
+						<td id="today"></td>
+						<th>진료과목</th>
+						<td>[[${prescript.department}]]</td>
+					</tr>
+				</tbody>
+			</table>
+	
+			<!-- 환자 정보 -->
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<th style="width: 15%;">환자 성명</th>
+						<td style="width: 35%;">[[${prescript.patientName}]]</td>
+						<th style="width: 15%;">보유 병명</th>
+						<td style="width: 35%;">[[${prescript.diseases}]]</td>
+					</tr>
+					<tr>
+						<th>보유 알러지</th>
+						<td>[[${prescript.allergies}]]</td>
+						<th></th>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+	
+			<!-- 처방 의약품 정보 -->
+			<div class="section-title">처방 의약품의 명칭</div>
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th class="medications">의약품명</th>
+						<th class="oneTime">1회 섭취량</th>
+						<th class="oneDay">1일 섭취 횟수</th>
+						<th class="takeDate">일수</th>
+						<th class="howToEat">용법</th>
+					</tr>
+				</thead>
+				<tbody id="tbody">
+					<tr id="medicTr" class="medication-row">
+					</tr>
+				</tbody>
+			</table>
+			
+			<div id="plusBtnDiv">
+				<button type="button" class="btn-warn" id="deleteBtn">약 삭제</button>
+				<button type="button" class="btn-modern" id="plusBtn">약 추가</button>
+			</div>
+			
+			<!-- 추가 정보 -->
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<th style="width:30%">주사제 투여 내역</th>
+						<td>
+							<input name="injectionHistory" th:value="${prescript.injectionHistory}" placeholder="없을시 없음 입력" required/>
+						</td>
+					</tr>
+					<tr>
+						<th>참고 사항</th>
+						<td>
+							<input name="doctorAdvice" th:value="${prescript.doctorAdvice}" placeholder="없을시 없음 입력" required/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	
+			<!-- 서명 및 발행 -->
+			<div class="signature-box">
+				<p class="small-text">사용기간: 처방일로부터 7일간</p>
+				<p>발행 의사: [[${prescript.doctorName}]]</p>
+				<p>발행 병원: [[${prescript.hospitalName}]]</p>
+			</div>
+			<div id="insertButtonDiv">
+				<button id="submitBtn" type="button" class="btn-modern">처방하기</button>
+			</div>
+		</div>
+		<input type="hidden" name="hospitalName" th:value="${prescript.hospitalName}">
+		<input type="hidden" name="hospitalAddress" th:value="${prescript.hospitalAddress}">
+		<input id="medications" type="hidden" name="medications">
+		<input type="hidden" name="preDate">
+		<input type="hidden" name="allergies" th:value="${prescript.allergies}">
+		<input type="hidden" name="doctorName" th:value="${prescript.doctorName}">
+		<input type="hidden" name="patientDiseases" th:value=${prescript.diseases}>
+		<input type="hidden" name="patientName" th:value="${prescript.patientName}">
+		<input type="hidden" name="department" th:value="${prescript.department}">
+		<input type="hidden" name="patientNum" th:value="${prescript.patientNum}">
+		<input type="hidden" name="prescriptNum" th:value="${prescript.prescriptNum}">
+	</form>
+
+	<div th:replace="~{footer :: footer}"></div>
+
+	<script th:inline="javascript">
+		let prescript = /*[[${prescript}]]*/1;
+		
+		let meds = prescript.medications.split("%&%");
+		let othm = prescript.oneTimeHowMany.split(",");
+		let odhm = prescript.oneDayHowMany.split(",");
+		let takeD = prescript.takeDate.split(",");
+		let howEat = prescript.howToEat.split(",");
+		
+		const tbody = document.getElementById('tbody');
+		
+		const optText = ['식사 전', '식사 후 바로', '식사 후 15분 이내','식사 후 30분 이내','식사 후 30분 이후'];
+		
+		// prescriptDetail.html 과 매우 유사한 방식
+		// 자세한 설명 생략, prescriptDetail.html 을 참고할 것
+		
+		let select;
+		
+// 		for(let i = 0; i < meds.length; i++){
+// 			const tr = document.createElement('tr');
+// 			tr.classList.add('medication-row');
+// 			const classes = ['meds', 'othm', 'odhm', 'takeD', 'howEat'];
+// 			const inputNames = ['', 'oneTimeHowMany', 'oneDayHowMany', 'takeDate', 'howToEat'];
+// 			const inType = ['text', 'number', 'number', 'number', 'hidden'];
+// 			for(let a = 0; a < 5; a++){
+// 				const td = document.createElement('td');
+// 				const input = document.createElement('input');
+// 				td.classList.add(classes[a]);
+// 				input.name = inputNames[a]; // name 속성 추가하기
+// 				input.type = inType[a]; // type 속성 설정하기
+				
+// 				if(a == 4){
+// 					select = document.createElement('select');
+// 					for(let k = 0; k < 5; k++){
+// 						const opt = document.createElement('option');
+// 						opt.innerText = optText[k];
+// 						select.appendChild(opt);
+// 					}
+// 					if(howEat[i] == "식사 전"){select.children[0].selected;}
+// 					if(howEat[i] == "식사 후 바로"){select.children[1].selected;}
+// 					if(howEat[i] == "식사 후 15분 이내"){select.children[2].selected;}
+// 					if(howEat[i] == "식사 후 30분 이내"){select.children[3].selected;}
+// 					if(howEat[i] == "식사 후 30분 이후"){select.children[4].selected;}
+// 				}
+// 				td.appendChild(select);
+// 				td.appendChild(input);
+// 				tr.appendChild(td);
+// 			}
+			
+// 			tr.children[0].children[0].value = meds[i]; // tr - td - input 으로 들어있기 때문에 children 을 2번 사용함 & innerText 가 아닌 value 로 사용해야함
+// 			tr.children[1].children[0].value = othm[i];
+// 			tr.children[2].children[0].value = odhm[i];
+// 			tr.children[3].children[0].value = takeD[i];
+// 			tr.children[4].children[0].value = howEat[i];
+// 			tbody.appendChild(tr);
+// 		}
+for (let i = 0; i < meds.length; i++) {
+    const tr = document.createElement('tr');
+    tr.classList.add('medication-row');
+
+    const classes = ['meds', 'othm', 'odhm', 'takeD', 'howEat'];
+    const inputNames = ['meds', 'oneTimeHowMany', 'oneDayHowMany', 'takeDate', 'howToEat'];
+    const inputTypes = ['text', 'text', 'number', 'number', 'hidden'];
+
+    for (let a = 0; a < 5; a++) {
+        const td = document.createElement('td');
+        td.classList.add(classes[a]);
+
+        // 마지막 칸 (howEat)일 때 select와 hidden input 추가
+        if (a === 4) {
+            // select 생성
+            const select = document.createElement('select');
+            select.name = inputNames[a];
+            const optText = ['식사 전', '식사 후 바로', '식사 후 15분 이내', '식사 후 30분 이내', '식사 후 30분 이후'];
+            for (let k = 0; k < optText.length; k++) {
+                const opt = document.createElement('option');
+                opt.value = optText[k];
+                opt.innerText = optText[k];
+                select.appendChild(opt);
+            }
+
+            // hidden input 생성
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = `${inputNames[a]}Hidden`; // Hidden input의 name 설정
+            hiddenInput.value = howEat[i]; // 기존 값 설정
+
+            // select와 hidden input 추가
+            td.appendChild(select);
+            td.appendChild(hiddenInput);
+
+            // select 값 설정 (howEat[i]에 따라 선택)
+            select.value = howEat[i];
+
+            // select 변경 시 hidden input 업데이트
+            select.addEventListener('change', function () {
+                hiddenInput.value = select.value;
+            });
+
+        } else {
+            // 일반 input 생성
+            const input = document.createElement('input');
+            input.type = inputTypes[a];
+            input.name = inputNames[a];
+            input.value = a === 0 ? meds[i] : a === 1 ? othm[i] : a === 2 ? odhm[i] : takeD[i];
+            td.appendChild(input);
+        }
+
+        tr.appendChild(td);
+    }
+
+    tbody.appendChild(tr);
+}
+
+	</script>
+
+</body>
+</html>

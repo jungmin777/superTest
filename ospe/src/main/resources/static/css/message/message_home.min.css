@@ -1,0 +1,330 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: "NEXON Lv1 Gothic OTF"
+}
+
+@font-face {
+	font-family: "NEXON Lv1 Gothic OTF";
+	src:
+		url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff")
+		format("woff");
+	font-weight: normal;
+	font-style: normal
+}
+
+body {
+	background-color: #f4f7fa;
+	color: #333;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%
+}
+
+.maintop, .message-container {
+	width: 100%;
+	max-width: inherit
+}
+
+.main {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 40px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px
+}
+
+.main .maintop {
+	display: flex;
+	flex-direction: column;
+	gap: 10px
+}
+
+.main .maintop .searchTitle {
+	font-weight: bold;
+	font-size: 30px;
+	margin-left: 40px
+}
+
+.main .maintop .hr {
+	border-top: 1px #000 solid;
+	margin-top: 5px
+}
+
+/* search */
+
+.main .search {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.searchdropdown{
+   width: 50%;
+    height: auto; /* 높이는 유연하게 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px; /* 적당한 간격 */
+    margin-bottom: 20px; /* 아래 간격 */
+}
+
+.main .search .SearchSelect {
+    text-align: center;
+    width: 30%; /* 선택 박스 너비 확대 */
+    height: 30px; /* 높이 조정 */
+    padding: 3px;
+    border-radius: 5px; /* 덜 둥글게 */
+    border: 1px solid #ccc;
+    font-size: 16px; /* 폰트 크기 증가 */
+    background-color: #f9f9f9;
+}
+
+.main .search .SearchInput {
+    width: 45%; /* 입력 칸 너비 확대 */
+    height: 30px; /* 높이 조정 */
+    padding: 5px;
+    border-radius: 5px; /* 덜 둥글게 */
+    border: 1px solid #ccc;
+    font-size: 16px; /* 폰트 크기 증가 */
+    background-color: #f9f9f9;
+}
+
+.main .search .SearchButton {
+    width: 20%; /* 버튼 너비 확대 */
+    height: 30px; /* 높이 조정 */
+    background-color: cornflowerblue;
+    color: #fff;
+    border: none;
+    border-radius: 5px; /* 덜 둥글게 */
+    font-size: 16px;
+    font-weight: bold; /* 버튼 강조 */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+}
+
+
+.main .search .SearchButton:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* 호버 시 약간 확대 */
+}
+
+.main .search .SearchButton:active {
+    background-color: #003f8a;
+    transform: scale(0.95); /* 클릭 시 약간 축소 */
+}
+
+.main .reservationtable {
+    width: 100%;
+    display: grid;
+    grid-auto-rows: 50px;
+    gap: 5px;
+}
+
+/* 테이블 헤더 스타일 */
+.main .firstcolTotal {
+    grid-template-columns: 50px 8fr 2fr 2fr 1.5fr; /* 제목 부분을 넓히고 나머지 간격 조정 */
+    display: grid;
+    align-items: center;
+    text-align: center;
+    border-bottom: 1px solid gray;
+    padding: 0 10px; /* 좌우 여백 조정 */
+}
+
+/* 테이블 헤더 텍스트 스타일 */
+.main .firstcolTotal .firstcol {
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #6a6a6a;
+}
+
+/* 메시지 리스트 스타일 */
+.main .messagelist {
+    grid-template-columns: 50px 8fr 2fr 2fr 1.5fr; /* 제목 부분 넓게 조정 */
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+    display: grid;
+    padding: 0 10px; /* 좌우 정렬 통일 */
+}
+
+/* 메시지 리스트 항목 */
+.main .messagelist .message {
+    color: #6a6a6a;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+
+/* 제목 링크 스타일 */
+.main .messagelist .message a {
+    font-size: 15px;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+/* 의사 아이디 */
+
+/* 의사 텍스트 색상 */
+.doctor-text {
+    color: #0073e6 !important; /* 의사 텍스트 색상 */
+    font-weight: bold !important;
+}
+
+/* 의사 아이디 */
+
+.main .messagelist .message a:hover {
+    color: #0056b3;
+    font-style: bold;
+}
+
+.main .messagelist .message a:active {
+    color: #ff5722;
+    text-decoration: none;
+}
+
+/* 보낸 사람, 받은 사람, 날짜 텍스트 스타일 */
+.main .messagelist .message span:not(:first-child) {
+    color: #999; /* 텍스트 색상을 옅게 변경 */
+    font-weight: normal;
+    font-size: 14px;
+}
+
+/* 체크박스 스타일 */
+.messagelist .message input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+/* 전체 체크박스 스타일 */
+.main .firstcolTotal .firstcol:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main .firstcolTotal .firstcol input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    margin: 0 auto; /* 가운데 정렬 */
+    cursor: pointer;
+}
+
+.main .firstcolTotal .firstcol .check-label {
+    font-size: 14px;
+    color: #666;
+    font-family: "KHNPHU";
+    margin-left: 5px;
+}
+
+.action-btn {
+	display: block;
+	margin: 20px auto;
+	padding: 10px 20px;
+	font-size: 16px;
+	color: #fff;
+	background-color:cornflowerblue;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color .3s ease, transform .2s ease
+}
+
+.action-btn:hover {
+	background-color: #0056b3;
+	transform: scale(1.05)
+}
+
+.action-btn:active {
+	background-color: #003f7f;
+	transform: scale(0.95)
+}
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 수직 정렬 추가 */
+    margin: 20px 0;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination .page-item {
+    margin: 0 5px;
+}
+
+.pagination .page-link {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #4a4a4a;
+    text-decoration: none;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+}
+
+.pagination .page-link:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #003f7f;
+    color: #fff;
+    border-color: #003f7f;
+    font-weight: bold; /* 강조 효과 */
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: #e0e0e0; /* 비활성 상태 배경색 */
+    color: #aaa; /* 비활성 상태 글자색 */
+    pointer-events: none; /* 클릭 비활성화 */
+}
+
+.page-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.page-navigation .nav-button {
+    font-family: "NEXON Lv1 Gothic OTF";
+    font-size: 16px;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: cornflowerblue;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-navigation .nav-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.page-navigation .nav-button:active {
+    background-color: #003f8a;
+    transform: scale(0.95);
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Ospe</title>
+    <link rel="stylesheet" href="./css/header.css">
+    
+</head>
+<body>
+    <header>
+        <!-- 상단 헤더 -->
+        <div class="top">
+            <div class="user-links">
+                <a th:href="${loggedIn} ? '/mainpage' : '/login' "><img src="/image/OspeLogo.png" alt="Ospe 로고 이미지" class="logo"></a>
+
+                <!-- 로그인 상태에 따라 다르게 표시 -->
+                <form id="logout-form" action="/logout" method="POST" style="display: inline;">
+                    <a href="#" onclick="document.getElementById('logout-form').submit();" class="login" th:text="${loggedIn} ? '로그아웃' : '로그인'"></a>
+                    
+                </form>
+                <!-- 마이페이지 -->
+              <a th:href="${loggedIn} ? '/mypage' : '/login'">마이페이지</a>
+            </div>
+        </div>
+
+        <!-- 중앙 헤더 -->
+        <div class="mid">
+            <div class="user-menu">
+                <a href="/mainpage" class="reserv">메인페이지</a>
+                <a href="/history" class="history">진료이력</a>
+                <a href="/preList" class="prescript">처방전</a>
+                <a href="/board_home" class="guide">게시판</a>
+                <a href="/messages/message_home " class="chat">메시지</a>
+            </div>
+        </div>
+
+        <!-- 하단 헤더 -->
+        <div class="bottom">
+            <span class="thx-text">OSPE 진료 사이트에 방문해주셔서 감사합니다.</span>
+            <div class="reserv-links">
+                <!-- 의사 로그인하면 진료예약 버튼 없애버리기 -->
+                <a th:if="${roles} != 'ADMIN'" th:href="@{/reservation_cust}" class="reserv">진료예약</a>
+                <span class="separator"></span>
+                <!-- 로그인한 사용자가 ADMIN(의사)면 doctor페이지로, 사용자면 cust페이지로 이동 -->
+                <a th:if="${roles} == 'ADMIN'" href='/search_doctor' class="check">예약조회</a>
+                <a th:if="${roles} != 'ADMIN'" href='/search_cust' class="check">예약조회</a>
+            </div>
+        </div>
+    </header>
+</body>
+</html>

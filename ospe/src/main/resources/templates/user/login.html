@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="./css/user/login.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+	<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+<title>로그인</title>
+</head>
+
+<body>
+	<!-- 헤더-->
+	<div th:replace="~{header :: header}"></div>
+
+
+	<!-- 로그인 창 -->
+		<!-- 환자 로그인 -->
+		<form action="/api/login" method="post">
+		  <div class="login-container">
+		    <table class="Pati_table">
+		      <tr>
+		        <td><h2>환자 로그인</h2></td>
+		      </tr>
+		      <tr>
+		        <td><input type="text" placeholder="ID" id="user-username" name="username" required></td>
+		      </tr>
+		      <tr>
+		        <td><input type="password" placeholder="Password" id="user-password" name="password" required></td>
+		      </tr>
+		      <tr>
+		        <td><input type="checkbox" id="user-rememberMe" style="width: 15% !important" onchange="handleRememberMe('user')"> 로그인 정보 저장</td>
+		      </tr>
+		      <tr>
+		        <td><input type="submit" value="LOGIN" class="Pati_btn" onclick="handleRememberMe('user');"></td>
+		      </tr>
+		      <tr>
+		        <td class="join"><a href="/patiJoin">회원가입</a></td>
+		      </tr>
+							<!-- 네이버 로그인 이미지 추가 -->
+			<tr>
+				<td>
+					<a href="/oauth2/authorization/naver">
+						<img src="/image/naver.png" alt="네이버 로그인" class="social-login-img">
+					</a>
+				</td>
+			</tr>
+
+			</table>
+		
+	</form>
+
+		<!-- 의사 로그인 -->
+		<form action="/api/login" method="post">
+		  <div class="login-container">
+		    <table class="Doctor_table">
+		      <tr>
+		        <td><h2>의사 로그인</h2></td>
+		      </tr>
+		      <tr>
+		        <td><input type="text" placeholder="ID" id="doctor-username" name="username" required></td>
+		      </tr>
+		      <tr>
+		        <td><input type="password" placeholder="Password" id="doctor-password" name="password" required></td>
+		      </tr>
+		      <tr>
+		        <td><input type="checkbox" id="doctor-rememberMe" style="width: 15% !important" onchange="handleRememberMe('doctor')"> 로그인 정보 저장</td>
+		      </tr>
+		      <tr>
+		        <td><input type="submit" value="LOGIN" class="Pati_btn" onclick="handleRememberMe('doctor');"></td>
+		      </tr>
+		      <tr>
+		        <td class="join"><a href="/doctorJoin">회원가입</a></td>
+		      </tr>
+		    </table>
+		</div>
+		</div>
+	</form>
+		<script>
+		// 페이지 로드 시 저장된 ID 불러오기
+		window.onload = function() {
+		    // 환자 로그인 ID
+		    const savedUserUsername = localStorage.getItem("savedUserUsername");
+		    if (savedUserUsername) {
+		        document.getElementById("user-username").value = savedUserUsername;
+		        document.getElementById("user-rememberMe").checked = true;
+		    }
+
+		    // 의사 로그인 ID
+		    const savedDoctorUsername = localStorage.getItem("savedDoctorUsername");
+		    if (savedDoctorUsername) {
+		        document.getElementById("doctor-username").value = savedDoctorUsername;
+		        document.getElementById("doctor-rememberMe").checked = true;
+		    }
+		};
+
+		// 로그인 정보 저장/삭제 처리
+		function handleRememberMe(role) {
+		    const rememberMeId = role === 'user' ? 'user-rememberMe' : 'doctor-rememberMe';
+		    const usernameId = role === 'user' ? 'user-username' : 'doctor-username';
+
+		    const rememberMe = document.getElementById(rememberMeId).checked;
+		    const username = document.getElementById(usernameId).value;
+
+		    if (rememberMe && username) {
+		        const storageKey = role === 'user' ? 'savedUserUsername' : 'savedDoctorUsername';
+		        localStorage.setItem(storageKey, username); // ID 저장
+		    } else {
+		        const storageKey = role === 'user' ? 'savedUserUsername' : 'savedDoctorUsername';
+		        localStorage.removeItem(storageKey); // 저장된 ID 삭제
+		    }
+		}
+
+		</script>
+
+	<!-- 푸터 -->
+	<div th:replace="~{footer :: footer}"></div>
+
+</body>
+
+</html>

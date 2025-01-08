@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>메시지</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script defer src="/js/message/message_send.js"></script>
+<!-- <script defer src="/js/message/message_home.js"></script> -->
+<link rel="stylesheet" href="/css/message/message.min.css">
+<link rel="stylesheet" href="/css/message/message_popup.css">
+<link rel="stylesheet" href="/css/header.css">
+<link rel="stylesheet" href="/css/footer.css">
+<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+<script>
+	const csrfToken = /*[[${_csrf.token}]]*/''; // CSRF 토큰 값을 가져와 변수에 저장
+	const csrfHeader = /*[[${_csrf.headerName}]]*/'X-CSRF-TOKEN'; // CSRF 헤더 이름 저장
+</script>
+</head>
+
+<body>
+	<div th:replace="~{header :: header}"></div>
+	
+	<main class="main">
+	
+	    <div class="maintop">
+	        <div class="searchTitle">제목 : <span th:text="${message.title}"></span> </div>
+	        <div class="hr"></div>
+	    </div>
+	
+	    <!-- 메시지 내용 -->
+	    <div class="message-view-container">
+	        <!-- 보낸 사람, 받은 사람, 날짜 -->
+	        <div class="message-info">
+	        
+	        	<div class="info-box">
+				    <p>보낸 사람:</p>
+				    <div id="sender" th:text="${message.sender}"></div>
+				    <div th:if="${senderType == 'Doctor'}" class="specialty" th:text="'(' + ${senderSpecialty} + ')'"></div>
+				</div>
+				<div class="info-box">
+				    <p>받은 사람:</p>
+				    <div id="receiver" th:text="${message.receiver}"></div>
+				    <div th:if="${receiverType == 'Doctor'}" class="specialty" th:text="'(' + ${receiverSpecialty} + ')'"></div>
+				</div>
+				
+	            <div class="info-box">
+	                <label for="date">날짜 :</label>
+	                <div id="date" th:text="${message.sendDateFormatted ?: '알 수 없음'}"></div>
+	            </div>
+	        </div>
+	
+	        <div class="hrLight"></div>
+	
+	        <!-- 내용 -->
+	        <div class="message-content">
+	            <div id="Content" th:text="${message.content}">내용</div>
+	        </div>
+	
+			<!-- 버튼 -->
+			<form th:action="@{/messages/message_delete_one/{id}(id=${message.id})}" method="post">
+			    <div class="button-group">
+			        <!-- "답장" 버튼 또는 "메시지 전송" 버튼 -->
+			        <button type="button" 
+			                class="action-btn reply-btn" 
+			                th:data-receiver="${!isSender} ? ${message.sender} : ${message.receiver}" 
+			                th:text="${!isSender} ? '답장' : '메시지'">
+			        </button>
+			
+			        <!-- "삭제" 버튼 -->
+			        <button type="submit" class="action-btn" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</button>
+			        
+			        <!-- "뒤로가기" 버튼 -->
+			        <a href="javascript:history.back();" class="action-btn">뒤로가기</a>
+			    </div>
+			</form>
+
+
+	    </div>
+	</main>
+
+	<div style="height: 200px;"></div>
+	<!-- 빈공간 추가 -->
+	
+	<div th:replace="~{footer :: footer}"></div>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>메시지</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script defer src="/js/message/message_send.js"></script>
+<script defer src="/js/message/message_delete.js"></script>
+<script defer src="/js/message/message_pagenation.js"></script>
+<link rel="stylesheet" href="/css/message/message_gotsent.css">
+<link rel="stylesheet" href="/css/message/message_popup.css">
+<link rel="stylesheet" href="/css/header.css">
+<link rel="stylesheet" href="/css/footer.css">
+<link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+<script>
+	const csrfToken = /*[[${_csrf.token}]]*/''; // CSRF 토큰 값을 가져와 변수에 저장
+	const csrfHeader = /*[[${_csrf.headerName}]]*/'X-CSRF-TOKEN'; // CSRF 헤더 이름 저장
+</script>
+</head>
+<body>
+	<div th:replace="~{header :: header}"></div>
+
+	<div id="header-container"></div>
+	<main class="main">
+
+		<div class="page-navigation">
+			<a class="nav-button reply-btn">메시지 전송</a>
+			<a href="/messages/message_home" class="nav-button">메시지 홈</a>
+			<a href="/messages/message_sent" class="nav-button">보낸 메시지</a>
+			<a href="/messages/message_got" class="nav-button">받은 메시지</a>
+		</div>
+
+		<div class="maintop">
+			<div class="searchTitle">보낸 메시지</div>
+			<div class="hr"></div>
+		</div>
+		
+		<!-- 조회할 내용 -->
+        <div class="search">
+            <form id="searchForm" method="get" action="/messages/message_sent" class="searchdropdown">
+                <select name="searchType" class="SearchSelect">
+                    <option value="titleContent" th:selected="${searchType == 'titleContent'}">제목/내용</option>
+                    <option value="receiver" th:selected="${searchType == 'receiver'}">받은사람</option>
+                </select>
+                <input type="text" name="searchKeyword" class="SearchInput"
+                	th:value="${searchKeyword}" placeholder="검색어를 입력하세요" />
+                <button type="submit" class="SearchButton">조회</button>
+            </form>
+        </div>
+
+		<!-- 조회 내역 생성 부분 -->
+		<div class="reservationtable">
+			<div class="firstcolTotal">
+		        <span class="firstcol">
+		            <input type="checkbox" id="checkAll" onclick="toggleAllCheckboxes(this)" />
+		        </span>
+				<span class="firstcol">제목</span>
+				<span class="firstcol">받은사람</span>
+				<span class="firstcol">날짜</span>
+				<!-- 전체 선택 체크박스 -->
+			</div>
+			
+			<div th:each="message : ${messages}" class="messagelist">
+			    <span class="message">
+			       <input type="checkbox" class="message-checkbox" th:value="${message.id}" />
+			    </span>
+			    <span class="message">
+			        <a class="title" th:href="@{/messages/message/{id}(id=${message.id})}" th:text="${message.title}"></a>
+			    </span>
+			    <span class="message" 
+			          th:text="${message.receiver}" 
+			          th:classappend="${receiverTypeMap[message.receiver] == 'Doctor'} ? 'doctor-text' : ''">
+			    </span>
+			    <span class="message date" th:text="${message.sendDateFormatted}"></span>
+			</div>
+		</div>
+		<button type="button" class="action-btn" onclick="deleteMessages()">삭제</button>
+	</main>
+
+		<!-- 페이지네이션 -->
+		<div class="container" th:if="${totalPages > 1}">
+		    <nav aria-label="Page navigation">
+		        <ul class="pagination">
+		        
+		            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+		                <a class="page-link" 
+		                	th:if="${currentPage > 1}"
+		                   th:href="@{/messages/message_sent(page=${currentPage - 1}, searchType=${searchType}, searchKeyword=${searchKeyword})}" 
+		                   aria-label="Previous">&lt;</a>
+		            </li>
+		            
+		            <li class="page-item" th:each="i : ${#numbers.sequence(startPage, endPage)}" 
+		                th:classappend="${i == currentPage} ? 'active'">
+		                <a class="page-link" 
+		                   th:href="@{/messages/message_sent(page=${i}, searchType=${searchType}, searchKeyword=${searchKeyword})}" 
+		                   th:text="${i}"></a>
+		            </li>
+		            
+		            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+		                <a class="page-link" 
+		                   th:href="@{/messages/message_sent(page=${currentPage + 1}, searchType=${searchType}, searchKeyword=${searchKeyword})}" 
+		                   aria-label="Next">&gt;</a>
+		            </li>
+		        </ul>
+		    </nav>
+		</div>
+	
+	<div style="height: 200px;"></div>
+	<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

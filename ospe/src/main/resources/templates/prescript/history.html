@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>진료이력</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/image/ospe_favicon.png" type="image/png">
+    <link rel="stylesheet" href="/css/prescript/history.min.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script defer src="/js/prescript/history.js" th:inline="javascript"></script>
+</head>
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{header :: header}"></div>
+
+    <!-- Main Content 부분 -->
+    <main class="main">
+        <div class="maintop">
+            <div class="searchTitle" th:text="${doctorname}+' 진료이력 관리'" ></div>
+            <div class="hr"></div>
+        </div>
+		
+        <!-- 조회할 내용 -->
+        <div class="search">
+        <form class="searchdropdown" action="/history/doctor" method="get" id="searchForm">
+            <select class="SearchSelect" name="searchselect">
+                <option value="환자명" th:selected="${searchselect == '환자명'}">환자명</option>
+                <option value="약종류" th:selected="${searchselect == '약종류'}">약종류</option>
+            </select>
+            <input class="SearchInput" name="searchinput" type="text" th:value="${searchinput}" />
+            <button type="submit" class="SearchButton">조회</button>
+        </form>
+	</div>
+        <!-- 조회 내역 생성 부분 -->
+        <div class="reservationtable">
+            <div class="firstcolTotal">
+                <span class="firstcol" id="patientnameText" name="patientSearch">환자명</span>
+                <span class="firstcol">진료의사</span>
+                <span class="firstcol">진료과</span>
+                <span class="firstcol" id="medicationText">약종류</span>
+                <span class="firstcol">처방일</span>
+            </div>
+            <div class="messagelist" th:each="pre : ${DoctorPrescript}">
+                <span class="message">[[${pre.patientName}]]</span>
+                <span class="message">[[${pre.doctorName}]]</span>
+                <span class="message">[[${pre.department}]]</span>
+
+                <!-- 약물 목록 부분 -->
+                <span class="message">
+                    <span th:with="medications=${pre.medications}">
+                        <span th:if="${#strings.length(medications) > 10}">
+                            <!-- '...' 버튼 표시 -->
+                            <button th:text="${#strings.substring(medications, 0, 10) + '...'}" type="button" class="toggle-button btn btn-hover"
+                                    data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top"
+                                    th:attr="data-bs-content=${medications}">
+                            </button>
+                        </span>
+                        <span th:if="${#strings.length(medications) <= 10}">
+                            <span th:text="${medications}"></span>
+                        </span>
+                    </span>
+                </span>
+                <span class="message" th:text="${#dates.format(pre.prescriptDate, 'yyyy-MM-dd')}"></span>
+            </div>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="container" th:if="${totalPages > 1}">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <!-- 이전 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:if="${currentPage > 1}"
+                           th:href="@{/history/doctor(page=${currentPage - 1}, searchselect=${searchselect}, searchinput=${searchinput})}" 
+                           aria-label="Previous">
+                            &lt;
+                        </a>
+                    </li>
+                    <!-- 페이지 번호 -->
+                    <li class="page-item" th:each="i : ${#numbers.sequence(startPage, endPage)}"
+                        th:classappend="${i == currentPage} ? 'active' : ''">
+                        <a class="page-link" 
+                           th:href="@{/history/doctor(page=${i}, searchselect=${searchselect}, searchinput=${searchinput})}" 
+                           th:text="${i}"></a>
+                    </li>
+                    <!-- 다음 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:if="${currentPage < totalPages}"
+                           th:href="@{/history/doctor(page=${currentPage + 1}, searchselect=${searchselect}, searchinput=${searchinput})}" 
+                           aria-label="Next">
+                            &gt;
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </main>
+
+    <!-- Footer 부분 -->
+    <div th:replace="~{footer :: footer}"></div>
+
+    <!-- 페이지네이션 및 Popover 초기화 관련 JS -->
+    <script>
+        let currentPage = 1;
+        let totalPages = 1; // 서버에서 가져오는 총 페이지 수
+        let startPage = 1;
+        let endPage = 10;
+
+        function loadPage(page) {
+            if (page < 1 || page > totalPages) return;
+
+            // 페이지가 현재 범위의 끝에 도달했을 경우
+            if (page > endPage) {
+                startPage += 10;
+                endPage = Math.min(startPage + 9, totalPages);
+            } else if (page < startPage) {
+                startPage = Math.max(1, startPage - 10);
+                endPage = startPage + 9;
+            }
+
+            // searchselect와 searchinput 값을 가져와서 URL에 포함시키기
+            let searchselect = document.getElementById("searchselect").value || "";
+            let searchinput = document.getElementById("searchinput").value || "";
+
+            currentPage = page;
+            window.location.href = `/history/doctor?page=${page}&searchselect=${searchselect}&searchinput=${searchinput}`;
+        }
+        // Popover 초기화 (Bootstrap 5)
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize all popovers
+            const popoverTriggers = document.querySelectorAll('[data-bs-toggle="popover"]');
+            popoverTriggers.forEach(trigger => {
+                new bootstrap.Popover(trigger);
+            });
+        });
+    </script>
+</body>
+</html>
